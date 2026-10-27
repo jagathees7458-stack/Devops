@@ -1,0 +1,20 @@
+version: "3.9"
+
+services:
+  web:
+    # Use a pre-built image from Docker Hub (set your username below)
+    # For local dev, you can replace this with: build: .
+    image: ${DOCKERHUB_USERNAME:-your-dockerhub-username}/devops-demo-app:latest
+    build: .           # Comment this out when pulling from registry
+    container_name: devops-demo-app
+    ports:
+      - "5000:5000"    # Maps host port 5000 → container port 5000
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
